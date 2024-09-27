@@ -1,16 +1,26 @@
 class Solution:
     def commonChars(self, words: List[str]) -> List[str]:
-        char_count = dict(collections.Counter(words[0]))
-        for char in char_count:
-            for word in words[1:]:
-                curr_char_count = collections.Counter(word)
-                if char not in curr_char_count.keys():
-                    char_count[char] = 0
-                    break
-                elif curr_char_count[char] < char_count[char]:
-                    char_count[char] = curr_char_count[char]
+        charCounts = []
+        for w in words:
+            count = {}
+            for c in w:
+                if c not in count:
+                    count[c] = 1
+                else:
+                    count[c] += 1
+            charCounts.append(count)
         common = []
-        for (char, count) in char_count.items():
-            for c in range(count):
-                common.append(char)
+        firstWord = charCounts[0]
+        for letter in firstWord:
+            inAll = True
+            minCount = firstWord[letter]
+            for word in charCounts[1:]:
+                if letter not in word:
+                    inAll = False
+                    break
+                else:
+                    minCount = min(minCount, word[letter])
+            if inAll:
+                common.extend(letter * minCount)
         return common
+        
